@@ -1,0 +1,22 @@
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\node[draw,rectangle] (box) at (0,0) {推定};
+\begin{scope}[every node/.style={draw,circle}]
+\node (prior) at (-3,0) {事前分布};
+\node (posterior) at (3,0) {事後分布};
+\node (data) at (0,-2) {データ};
+\end{scope}
+\begin{scope}[every path/.style={-{Latex[open]}}]
+\draw (prior) -- (box);
+\draw (box) -- (posterior);
+\draw (data) -- (box);
+\end{scope}
+\end{tikzpicture}
+\caption{ベイズ推定の模式図} \label{fig:bayesian-framework}
+\end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

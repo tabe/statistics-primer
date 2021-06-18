@@ -1,0 +1,64 @@
+\newcommand{\Outcome}{\Omega}
+\newcommand{\Field}{\mathcal{F}}
+\newcommand{\Action}{\mathcal{A}}
+\newcommand{\Realization}{\mathcal{X}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\Prob}[1]{\mathbb{P}\qty(#1)}
+\newcommand{\Probsub}[2]{\mathbb{P}_{#1}\qty(#2)}
+\newcommand{\CondProb}[2]{\Prob{#1 \mid #2}}
+\newcommand{\E}[1]{\mathbb{E}\qty[#1]}
+\newcommand{\Esub}[2]{\mathbb{E}_{#1}\qty[#2]}
+\newcommand{\thetaorange}{\textcolor{orange}{\theta}}
+\newcommand{\thetaprior}{\textcolor{blue}{\theta_{\text{prior}}}}
+\newcommand{\thetaposterior}{\textcolor{red}{\theta_{\text{posterior}}}}
+\DeclareMathOperator*{\Risk}{R}
+\DeclareMathOperator*{\MaxRisk}{MR}
+\DeclareMathOperator*{\BayesRisk}{BR}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+%% 1st: a
+\newcommand{\decisionscheme}[1]{
+\node (Probability) at (0,1.4) {$(\Omega, \Field, P_{\textcolor{orange}{\theta}})$};
+
+\begin{scope}[every node/.style={draw,rectangle}]
+\node (Omega) at (0,0) {{\Huge $\Omega$}};
+\node (Realization) at (3,0) {{\Huge $\Realization$}};
+\node (Action) at (6,0) {{\Huge $\Action$}};
+\node (Loss) at (9,0) {{\Huge $\Reals$}};
+\node (D) at (4.5,1.4) {{\Large $D$}};
+\node (Theta) at (1.5,3.5) {{\Huge $\Theta$}};
+\end{scope}
+
+\node (theta in Theta) at (1.5,2.7) {\rotatebox[origin=c]{90}{$\in$}};
+\node (in1) at (0,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (in2) at (3,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (in3) at (6,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (in4) at (9,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (in5) at (4.5,0.8) {\rotatebox[origin=c]{90}{$\in$}};
+
+\begin{scope}[every node/.style={}]
+\node (omega) at (0,-1.5) {$\omega$};
+\node (realization) at (3,-1.5) {$x$};
+\node (action) at (6,-1.5) {$#1$};
+\node (loss) at (9,-1.5) {$L(\textcolor{orange}{\theta}, #1)$};
+\end{scope}
+
+\draw[-Latex] (Omega) -- node[above] (X) {{\Large $X_{\textcolor{orange}{\theta}}$}} (Realization);
+\draw[orange] (Probability) -- (X);
+\path (Omega) -- node[below] {確率変数} (Realization);
+\draw[-Latex] (Realization) -- node[above] (d) {{\Large $d$}}  (Action);
+\path (Realization) -- node[below] {決定規則} (Action);
+\draw[-Latex] (Action) -- node[above] (L) {{\Large $L(\textcolor{orange}{\theta}, \cdot)$}} (Loss);
+\path (Action) -- node[below] {損失} (Loss);
+\draw[|->] (omega) -- (realization);
+\draw[|->] (realization) -- (action);
+\draw[|->] (action) -- (loss);
+
+\node (theta) at (1.5,2) {$\textcolor{orange}{\theta}$};
+
+\begin{scope}[every path/.style={dashed,orange}]
+\draw (theta) -- (X);
+\draw (theta) -| (L);
+\end{scope}
+}

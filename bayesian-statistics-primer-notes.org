@@ -1,0 +1,455 @@
+#+TITLE: ベイズ統計入門
+#+AUTHOR: 安部武志
+#+EMAIL: t.abe@yamaguchi-u.ac.jp
+#+DATE: 2021-06-18
+#+OPTIONS: email:t toc:nil
+#+LICENSE: CC BY-SA 4.0
+#+LATEX_COMPILER: lualatex
+#+LATEX_CLASS: ltjsarticle
+#+LATEX_HEADER: \usepackage[type={CC},modifier={by-sa},version={4.0}]{doclicense}
+#+LATEX_HEADER: \input{definitions.tex}
+
+* 確率に関する表記
+
+** 慣習
+この入門では、よく見られる確率論の慣習に従った表記に従う。
+- 別途明示的に書かない限り、各確率変数は確率空間\((\Omega, \Field, \mathbb{P})\)上のものとする。
+  ここで\(\Omega\)は標本空間、\(\Field\)は事象全体の集合(つまり\(\Omega\)上の完全加法族)、\(\mathbb{P}\)は確率関数である。
+- 事象\(A\)について、\(\Prob{A}\)は(A\)の確率を表す。
+- 確率変数\(X\)について、ある実現値の(可測)集合\(W\)から定まる事象\(X^{-1}(W)\)[fn:3]についての確率\(\Prob{X^{-1}(W)}\)を\(\Prob{X \in W}\)と略す。
+- 確率変数\(X\)に対して\(\Prob{X}\)と書くことがあるが、これは"\(\Prob{X \in W}\)"のうちの"\(\in W\)"を略しているため、具体的な確率ではなく任意の(可測)集合\(W\)についての言明で用いられる。
+- 離散確率変数の場合には、確率\(\Prob{X \in \{x\}}\)を\(\Prob{X = x}\)で表す。
+  さらには\(X\)も略して、\(\Prob{x}\)と書くこともある。
+  実現値をアルファベットの小文字で表しているために、かろうじて\(\Prob{X}\)と区別できる。
+- 中には、確率\(\Prob{X \in W}\)を\(\Prob{W}\)と書いてしまう略記もある。
+  \(W\)がある実現値の集合であり、結果の集合ではないということが明確で混乱がなければこれも許される。
+  が、初学者には親切とはいえない。
+- \(\CondProb{A}{B}\)は、事象\(A\)という前提の下での事象\(B\)の条件付き確率を表す。
+  条件付きでない確率の場合と同じように、しばしば\(\CondProb{x}{y}\)のように略記する。
+
+** 独自の配慮
+記号を見ただけで何を表すかが分かりやすいように、この入門では以下のような表記を用いる。
+- 確率変数を表す記号: \(X, X_i\)等
+- 事象を表す記号: \(A, B, A_i, B_i\)等
+- 実現値の(可測)集合を表す記号: \(W, W_i\)等
+- 母数を表す記号: \(\theta\)等
+
+** その他の記法
+- \(\Reals^+ \equiv \{r \in \Reals: r \geq 0\}\): 非負実数集合
+
+* 推計統計のための数理
+推計統計の2つの流儀である頻度主義統計およびベイズ統計は、以下の図に示すような共通の数理的な基礎づけがされている。
+#+begin_export latex
+\input{foundation.tex}
+#+end_export
+
+* 確率論の基本
+以下の事実は「ベイズの定理」と呼ばれる確率論の基本的な定理である。
+
+** ベイズの定理
+任意の事象\(A\)および\(B\)について、\(\Prob{A} \neq 0\)のとき以下が成り立つ:
+#+begin_export latex
+\begin{equation}\label{eqn:theorem}
+\CondProb{A}{B} = \frac{\CondProb{A}{B} \Prob{A}}{\Prob{B}}
+\end{equation}
+#+end_export
+
+この定理にしたがって事前確率とデータから事後確率を求めるというのが、ベイズ統計の基本となるアイデアである[fn:2]。
+興味の対象である仮説を\(H\)という確率変数で表すものとし、データを表す確率変数を\(D\)とするとき、
+\[\Prob{H \mid D} = \frac{\Prob{D \mid H} \Prob{H}}{\Prob{D}}\]
+
+あるいは、仮説のモデルに母数\(\theta\)という確率変数を用いる場合には
+\[\Prob{\theta \mid D} = \frac{\Prob{D \mid \theta} \Prob{\theta}}{\Prob{D}}\]
+
+* ベイズ統計の概要
+ベイズ統計の枠組みを簡単に図示すると、以下のようになる:
+
+#+begin_export latex
+\input{bayesian-framework.tex}
+#+end_export
+
+真ん中の箱のようなものがベイズ統計で行う「推定」を表し、事後分布とデータが「入力」、事後分布が「出力」であることを表す。
+
+* 頻度主義統計とベイズ統計の比較
+** 共通点
+頻度主義統計とベイズ統計という2つの流儀を比べるために、まず何が共通なのかについて考える。
+- どちらの流儀でも確率変数でランダムな出来事を表すという点は同じである。
+
+** 相違点
+頻度主義統計においては、仮説は真であるかそうでないかのどちらかに限る。
+一方ベイズ統計においては、仮説が真であるかどうかの不確かさを確率変数として表す。
+このことは、パラメトリックモデルの母数に依存して仮説の真偽が決まる場合には次のように言い換えられる。
+
+- 頻度主義統計におけるパラメトリックモデルでは、その確率分布の母数は(未知の)固定された値をもつとされる。
+- 一方、ベイズ統計におけるパラメトリックモデルでは、その母数自体の不確かさを(別途)確率変数で表す。
+
+** 対照的な点についての一覧
+以下に頻度主義統計とベイズ統計という2つの流儀を比較した表を示す。
+
+|      | 頻度主義統計                       | ベイズ統計                             |
+|------+------------------------------------+----------------------------------------|
+| 標本 | ランダム                           | ランダム                               |
+| 母数 | 固定                               | ランダム                               |
+| 前提 | 標本分布が既知である               | 事前分布を考える                       |
+| 目標 | 仮説や母数についての言明を判断する | 仮説や母数についての事後分布を推定する |
+| 基準 | 最尤法                             | MAP法                                  |
+
+この入門では以降で順にこれらの相違点について説明する。
+
+* (意思)決定理論
+決定理論と呼ばれる理論は、確率論に基づいた数学の一分野である。
+ランダムな出来事に影響されるような状況における意思決定で、いかに損失を少なくするかという問題を解くための理論である。
+つまり、確率変数に依存する損失をなるべく小さくすることを目的としている。
+
+#+begin_export latex
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\node[draw,circle] (theta) at (0,0) {母数};
+\node[draw,rectangle,inner sep=5mm] (X) at (2,0) {\(X: \Outcome \to \Realization\)};
+\node[draw,circle] (x) at (4,0) {\(x\)};
+\node[draw,rectangle,inner sep=5mm] (d) at (2,-2) {\(d: \Realization \to \Action\)};
+\node[draw,circle] (a) at (4,-2) {\(a\)};
+\node[draw,rectangle,inner sep=5mm] (loss) at (2,-4) {\(L: \Theta \times \Action \to \Reals\)};
+
+\draw (theta) -- (X);
+\draw[->] (X) -- (x);
+\draw[->] (x) -- (d);
+\draw[->] (d) -- (a);
+\draw[->] (theta) |- (loss);
+\draw[->] (a) -- (loss);
+\end{tikzpicture}
+\caption{決定理論の枠組み}
+\end{figure}
+#+end_export
+
+* 観察された実現値と行為
+ランダムな出来事を確率空間\((\Outcome, \Field, P)\)上の確率変数\(X: \Outcome \to \Realization\)で表現する。
+とり得る行為は一般に複数あり、それら全体の集合を\(\Action\)で表す。
+\(\Action\)の中から観察した実現値に応じて1つを選ぶ(決定する)とする。
+
+さまざまな意思決定の状況をこの形式に当てはめることができる。以下にいくつかの例を挙げる。
+
+#+begin_export latex
+\newcommand{\exampleI}[1]{
+\begin{itemize}
+\item \(\Theta = \{健康, 風邪をひいている\}\): 朝の健康状態
+\item \(\Realization = \Reals\): 朝の体温(℃)
+\item \(\Action = \{登校する, 休む, 病院に行く\}\)
+#1
+\end{itemize}
+}
+\newcommand{\exampleII}[1]{
+\begin{itemize}
+\item \(\Theta = \Reals^+\): 今日の降水量(mm)
+\item \(\Realization = \Reals^+\): 午前の降水量(mm)
+\item \(\Action = \{傘を持たずに出かける, 傘を持って出かける, 外出しない, 避難する\}\)
+#1
+\end{itemize}
+}
+\newcommand{\exampleIII}[1]{
+6面体サイコロが1つ与えられる。
+\begin{itemize}
+\item \(\Theta = [0, 1]^6\): あるサイコロの出目の(真の)分布
+\item \(\Realization = \{1,2,3,4,5,6\}^n\): そのサイコロを\(n\)回独立に振った場合の出目を表す長さ\(n\)の列
+\item \(\Action = [1, 6]\): そのサイコロの出目の平均の点推定
+#1
+\end{itemize}
+}
+\newcommand{\exampleIV}[1]{
+6面体サイコロが1つ与えられる。
+\begin{itemize}
+\item \(\Theta = [0, 1]^6\): そのサイコロの出目の(真の)分布
+\item \(\Realization = \{1,2,3,4,5,6\}^n\): そのサイコロを\(n\)回独立に振った場合の出目を表す長さ\(n\)の列
+\item \(\Action = [1, 6]^2\): そのサイコロの出目の平均の95\%信頼区間
+#1
+\end{itemize}
+}
+\newcommand{\exampleV}[1]{
+クローンヒツジが\(n\)匹ずつ2群いる。各群のヒツジはそれぞれオリジナルのヒツジaおよびヒツジbからのクローンである。
+\begin{itemize}
+\item \(\Theta = \{0("aはbと同じである"), 1("aとbは異なる")\}\)
+\item \(\Realization = \Reals^+\): n匹ずつ2つの群に分かれている各ヒツジの体重(kg)
+\item \(\Action = \{H_0(2群は同じクローンから), H_1(2群は同じ母集団からではない)\}\): 仮説
+#1
+\end{itemize}
+}
+#+end_export
+
+** 意思決定の例1
+#+begin_export latex
+\exampleI{}
+#+end_export
+
+** 意思決定の例2
+#+begin_export latex
+\exampleII{}
+#+end_export
+
+** 意思決定の例3
+#+begin_export latex
+\exampleIII{}
+#+end_export
+
+** 意思決定の例4
+#+begin_export latex
+\exampleIV{}
+#+end_export
+
+** 意思決定の例5
+#+begin_export latex
+\exampleV{}
+#+end_export
+
+このように、点推定、区間推定、そして仮説検定も意思決定問題として形式化できる。
+
+* 損失関数、あるいは効用関数
+損失関数を最小にするという問題は、負の符号をほどこした対応する効用関数を最大にするという問題に置き換えることができる。
+逆もまた可能である。なので、一方を考えることは他方を考えることと同じである。
+以後この入門では、損失関数を考えることを前提とする。
+
+損失関数は母数と行為を引数にもつ実数値関数である:
+\[
+L: \Theta \times \Action \to \Reals
+\]
+この入門ではさらに
+\[
+L(\theta, a) \geq 0
+\]
+が成り立つものとする。これは本質的な制限ではないが、後の議論を容易にする。
+
+確率変数を引数にもつ損失関数は、それ自体が確率変数になる。
+したがって、適切な条件の下で期待値をもつ。
+
+* 決定規則
+各実現値についてどのような行為を選ぶかについての取り決めが決定規則である。
+決定規則を定めることは、可能な実現値全体の集合である\(\Realization\)から可能な行為全体の集合である\(\Action\)への関数を定めることである。
+つまり、ある決定規則\(d\)は
+\[d: \Realization \to \Action\]
+という関数で表される。
+決定理論では、個別の決定規則について損失がどのくらいになるかを評価し、損失が少ないものを選ぶことに腐心する。
+
+この入門では単に規則と略すことにする。
+
+* 意思決定の模式化
+#+begin_export latex
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\decisionscheme{a}
+\end{tikzpicture}
+\caption{意思決定の模式図}
+\end{figure}
+#+end_export
+
+* リスク
+損失関数\(L(\theta, a)\)が与えられ、母数の値が\(\theta \in \Theta\)である場合、リスク関数\(\Risk(\theta, d)\)は次のように定義される:
+\[
+\Risk(\theta, d) = \Esub{\theta}{L(\theta, d(X))}
+\]
+すなわち、リスクは決定規則\(d\)を選んだときの期待損失のことである。
+ここで
+- \(\Esub{\theta}{\cdot}\)が母数の値が\(\theta\)である分布に関する期待値であること、および
+- \(\Risk(\theta, d) \geq 0\)であること
+に注意。
+
+* 好ましい決定規則の種類
+ランダムな出来事が結果に影響するような状況では、どのようにリスクを小さくするかについていろいろなアプローチがあり得る。
+ここでは、2通りの好ましい規則について説明する。
+
+** ミニマックス規則
+下した意思決定が招く最大のリスクをできるだけ小さくしたいとする。
+このようなときに求めるのは、次の性質を満たすような規則\(d^*\)である: すべての規則\(d\)について
+#+begin_export latex
+\begin{equation}\label{eqn:minimax}
+\MaxRisk(d^*) \leq \MaxRisk(d).
+\end{equation}
+#+end_export
+ただし
+\[
+\MaxRisk(d) \equiv \sup_{\theta \in \Theta} R(\theta, d)
+\]
+と定義する。
+つまり、他の規則に変えてもリスクの上限がこれより小さくならないような規則が\(d^*\)である。
+上の式(\ref{eqn:minimax})を満たす規則\(d^*\)をミニマックスリスク規則と呼ぶ。
+
+ミニマックスリスク規則\(d^*\)があれば、\(\MaxRisk(d^*)\)は
+\[
+\inf_{d \in \D} \sup_{\theta \in \Theta} R(\theta, d)
+\]
+と一致する。
+さらに実際に上限\(\sup_{\theta \in \Theta}\)を達成する値\(\theta\)があるときは、上を
+\[
+\min_{d \in \D} \max_{\theta \in \Theta} \Risk(\theta, d)
+\]
+と表してもよく、ミニマックスと呼ばれる所以である。
+
+** もし母数自体が確率変数なら
+もし母数\(\theta\)の不確かさを確率変数として考える場合には、図\ref{fig:theta-is-random}のように拡張される。
+#+begin_export latex
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\input{bayesian-scheme.tex}
+\end{tikzpicture}
+\caption{母数を確率変数と見なす場合の意思決定} \label{fig:theta-is-random}
+\end{figure}
+#+end_export
+
+** ベイズ規則
+仮に母数\(\theta\)が確率変数とする。適切な条件の下で、次のような期待値を計算できる。
+\[
+\BayesRisk(d) \equiv \E{R(\theta, d)}
+\]
+この期待リスクをできるだけ小さくしたいとする。
+そのようなときに求める規則\(d^*\)は、次の性質を満たす: すべての規則\(d\)について
+#+begin_export latex
+\begin{equation}\label{eqn:bayesian}
+\BayesRisk(d^*) \leq \BayesRisk(d).
+\end{equation}
+#+end_export
+つまり、他の規則に変えても期待リスクがこれより小さくならないような規則が\(d^*\)である。
+上の式(\ref{eqn:bayesian})を満たす規則\(d^*\)をベイズ規則と呼ぶ。
+
+* パラメトリックなベイズ推定
+ベイズ統計の模式図\ref{fig:bayesian-framework}は、パラメトリックなモデルの場合は図\ref{fig:parametric-bayesian-framework}のようになる。
+#+begin_export latex
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\node[draw,rectangle] (box) at (0,0) {推定};
+\begin{scope}[every node/.style={draw,circle}]
+\node (prior) at (-3,0) {\(\thetaprior\)};
+\node (posterior) at (3,0) {\(\thetaposterior\)};
+\node (data) at (0,-2) {\(x\)};
+\end{scope}
+\begin{scope}[every path/.style={-{Latex[open]}}]
+\draw (prior) -- (box);
+\draw (box) -- (posterior);
+\draw (data) -- (box);
+\end{scope}
+\end{tikzpicture}
+\caption{パラメトリックなベイズ推定の模式図} \label{fig:parametric-bayesian-framework}
+\end{figure}
+#+end_export
+
+* 事前分布の選択
+1. 無情報的事前分布
+2. パラメトリックなアプローチ
+  - 経験的ベイズ
+  - 共役事前分布
+3. ノンパラメトリックなアプローチ
+  - 経験的ベイズ
+  - ブートストラップ
+
+* 無情報的事前分布
+推定対象である確率変数のどの実現値も「同様に確からしい」と考えている場合の事前分布。
+- 最尤推定とMAP推定が *一致する*
+
+* 共役事前分布
+事前分布も事後分布も同じ分布族になる
+- \(\thetaprior\)から\(\thetaposterior\)を簡単に求められる
+
+* 共役事前分布の例
+\(n\)回試行、成功確率\(p\)の二項分布に従う確率変数\(X\)について推定したい。
+- ただし\(n\)は既知で固定とする。\(p\)が未知の母数(\(0 < p < 1\))。
+
+\(p\)についての事前分布\(Y\)を、ある\(a > 0\)、\(b > 0\)を母数にもつベータ分布で表す。
+
+そのようなベータ分布の密度関数は
+\[
+f(r; \alpha, \beta) = \frac{r^{\alpha - 1} (1 - r)^{\beta - 1}}{B(\alpha, \beta)}, 0 < r < 1.
+\]
+
+\(X\)の観察データ\(x\)が入力された場合の事後分布はやはりベータ分布になり、その密度関数は
+\[
+f(r \mid x) = \frac{r^{\alpha + x - 1} (1 - r)^{n - x + \beta - 1}}{B(\alpha + x, \beta + n - x)}.
+\]
+
+\to \(x\)からすぐ計算できる
+
+- 事前分布 :: 平均\(\frac{\alpha}{\alpha + \beta}\)、分散\(\frac{\alpha \beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}\)
+- 事後分布 :: 平均\(\frac{\alpha + x}{\alpha + \beta + n}\)、分散\(\frac{(\alpha + x)(\beta + n - x)}{(\alpha + \beta + n)^2 (\alpha + \beta + n + 1)}\)
+
+* 経験的ベイズ
+経験的ベイズでは、標本の *周辺確率* を事前分布に用いる。
+
+* ブートストラップ法
+限られたサイズの標本から標本分布の情報を得る。
+
+* ナイーブベイズ分類器
+与えられたデータから分類を機械学習する手法の1つ。
+
+ナイーブベイズ分類器は、目的変数\(C\)が与えられたときの各説明変数\(X_i\)同士は独立であるということを前提としている。
+すなわち、以下のような条件付き独立性を前提としている。
+\[
+\CondProb{X_1, X_2, ..., X_N}{C} = \prod_{i=1}^N \CondProb{X_i}{C}
+\]
+
+予測される分類
+\[
+\hat{c} = \argmax_{c \in V_C} \Prob{c} \prod_{i=1}^N \CondProb{x_i}{c}
+\]
+は、MAP規則から導かれる。
+
+* ベイズ統計における区間推定: 信用区間
+
+** 信頼区間と信用区間との対比
+
+|                      | 信頼区間                 | 信用区間                 |
+|----------------------+--------------------------+--------------------------|
+| 前もって与える水準   | 信頼水準(\(\alpha\)水準) | 幅(\(\delta\))           |
+| 標本から導かれるもの | 区間                     | 母数が区間に入る事後確率 |
+
+* 参考文献
+この入門を準備する上で、次に挙げる文献を参考にしている。
+いずれもさらに学びたいという方にお薦めである。
+特に、頻度主義統計とベイズ統計を決定理論という共通の枠組みから扱うというこの入門の骨子は、[1]から拝借している。
+[2]は、Rで書かれた具体的なコードで確率分布の振舞いを例示するという現代的な数理統計の教科書である。
+経験的ベイズ統計的手法とその応用については[3]が詳しい。
+ベイズ統計の基礎とともに数理統計一般を丁寧に説明している教科書として[4]がある。
+[5]では、ベイズ統計的手法を用いた生存解析のためのノンパラメトリックおよびセミパラメトリックなモデルを紹介している。
+1. Young, G. & Smith, R. (2005). Essentials of Statistical Inference (Cambridge Series in Statistical and Probabilistic Mathematics). Cambridge: Cambridge University Press. [[https://doi.org/10.1017/CBO9780511755392][doi:10.1017/CBO9780511755392]]
+2. Chihara, L. M. & Hesterberg, T. C. (2018). Mathematical Statistics with Resampling and R, 2nd Edition. Wiley. ISBN-13: 9781119416548.
+3. Efron, B. (2010). Large-Scale Inference: Empirical Bayes Methods for Estimation, Testing, and Prediction, Institute of Mathematical Statistics Monographs. Cambridge University Press, Cambridge. [[https://doi.org/10.1017/CBO9780511761362][doi:10.1017/CBO9780511761362]]
+4. Miller, I. & Miller, M. (2018). John E. Freund's Mathematical Statistics with Applications, (Classic Version) 8th Edition (Pearson Modern Classics for Advanced Statistics Series). Pearson. ISBN-13: 9780134995373.
+5. Klein, J. P. & Moeschberger, M. L. (2003). Survival Analysis: Techniques for Censored and Truncated Data, 2nd Edition (Statistics for Biology and Health). Springer. [[https://doi.org/10.1007/b97377][doi:10.1007/b97377]]
+
+* 用語集
+この入門に出てきた統計用語をその英語表記とともにまとめる。
+- (意思)決定理論[decision theory] :: 損失や効用を考慮して行為を選択するための理論。
+- MCMC法[Markov chain Monte Carlo method] :: 適切なマルコフ鎖をシミュレーションすることで求めたい分布を漸近的に得る方法。
+- ブートストラップ法[bootstrap] :: 標本されたデータから再標本することで、母集団についての情報を得る方法。
+- リスク関数[risk function] :: 母数の値と行為を引数にもつ損失の期待値についての関数。
+- 事前分布[prior distribution] :: ベイズ統計で事前の知識等から定める仮説や母数についての確率分布。
+- 事後分布[posterior distribution] :: ベイズ統計でデータを得た結果導かれる仮説や母数についての確率分布。
+- 事象[event] :: 確率空間\((\Outcome, \Field, \mathbb{P})\)が与えられた場合は、\(\Field\)の要素のことを事象と呼ぶ。
+- 信用区間[credible interval] :: 確信区間とも訳される。
+- 共役事前分布[conjugate prior] :: 対応する事後分布が同じ確率分布族になるような確率分布。推定が扱いやすいために事前分布に採用される。
+- 効用関数[utility function] :: 符号を逆転させることで、損失関数と同一視することができる。すなわち、効用関数の最大化は対応する損失関数の最小化にあたる。
+- 完全加法族[\(\sigma\)-algebra] :: ある集合\(\Outcome\)上の完全加法族とは、完全加法性を満たす\(\Outcome\)の部分集合族。
+- 損失関数[loss function] :: 母数と行為にともなう損失を表す関数。
+- 最尤法[method of maximum likelihood] ::
+- 標本[sample] :: 母集団を表す確率変数の実現値をくり返し得ることに対応する。
+- 標本サイズ[sample size] :: 1回の標本で得られる観測の個数。
+- 標本分布[sampling distribution] :: 特定の母集団から多数の標本を得た場合にある統計量の確率分布。
+- 標本空間[sample space] :: 事象を構成する要素(結果)全体の集合。
+- 母数[parameter] :: 母数の値が決まると確率分布が特定される。
+- 母集団[population] :: 実験などの対象となるものや事象の集まり。
+- 決定規則[decision rule] :: 実現値からどの行為を選ぶかについて定める。つまり、\(\Realization\)から\(\Action\)への関数。
+- 確率分布[probability distribution] :: 厳密には確率空間\((\Outcome, \Field, \mathbb{P})\)によって表される。\(\Outcome\)や\(\Field\)が明らかな場合には、\(P\)で簡単に表される。
+- 確率変数[random variable] :: 確率空間\((\Outcome, \Field, \mathbb{P})\)からある可測空間\((\Realization, \mathcal{A})\)への可測関数\(X: \Outcome \to \Realization\)。
+- 確率空間[probability space] :: 標本空間\(\Outcome\)、\(\Outcome\)上の完全加法族\(\Field\)、および確率関数\(P: \Field \to [0, 1]\)の3つ組\((\Outcome, \Field, \mathbb{P})\)。
+- 確率関数[probability function] :: 標本空間\(\Outcome\)と\(\Outcome\)上の完全加法族\(\Field\)について、確率の公理を満たす関数\(P: \Field \to [0, 1]\)を確率関数と呼ぶ。
+- 結果[outcome] :: 標本空間の要素。各事象は標本空間の部分集合なので、その要素は結果である。
+- 統計量[statistic] :: 標本から計算される量。
+- 行為[action] :: 行為空間の要素。
+- 実現値[realization] :: 結果に確率変数をほどこして得られる値。
+- 推定値[estimator] :: 母数を推定するため観察された実現値から計算される値、あるいはその導出規則(式やアルゴリズム)。
+
+* Footnotes
+[fn:3] \(W\)の\(X\)による逆像: \(X^{-1}(W) \equiv \{\omega \in \Omega: X(\omega) \in W\}.\)
+
+[fn:1] \doclicenseLongText \doclicenseImage[imagewidth=4em]
+
+[fn:2] ただし、これは(定理の仮定を満たす)どの確率についても成り立つ事実であることに注意。なので、この定理を使って何らかの条件付き確率を求めることは、統計の流儀に関わらず正当である。

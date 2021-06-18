@@ -1,0 +1,21 @@
+\decisionscheme{\textcolor{red}{\theta_{\text{posterior}}}}
+
+\color{blue}
+
+\begin{scope}[every node/.style={draw,rectangle}]
+\node (U) at (-1.5,3.5) {{\Huge $U$}};
+\end{scope}
+
+\node (u in U) at (-1.5,2.7) {\rotatebox[origin=c]{90}{$\in$}};
+
+\begin{scope}[every node/.style={}]
+\node (u) at (-1.5,2) {$u$};
+\end{scope}
+
+\draw[-Latex] (U) -- node[above] (thetaprior) {{\Large $\thetaprior$}} (Theta);
+\draw[|->] (u) -- (theta);
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

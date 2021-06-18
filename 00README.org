@@ -1,0 +1,20 @@
+#+TITLE: 統計入門
+
+* 概要
+統計を学ぶ方向けに日本語で説明している。
+
+* 内容
+** ベイズ統計入門
+*** 前提知識
+確率論および統計の基礎的な知識を前提にしている。
+例えば、確率分布や確率変数、記述統計、仮説検定について既に知っているものとする。
+*** 講義ノート
+[[./bayesian-statistics-primer-notes.org]]
+
+* フィードバック
+お気付きの点などありましたら
+[[mailto:t.abe@yamaguchi-u.ac.jp][t.abe@yamaguchi-u.ac.jp]]
+にメールでご連絡ください。
+
+* ライセンス
+このレポジトリの内容は[[https://creativecommons.org/licenses/by-sa/4.0/][Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)]]の下で自由に利用していただいて構いません。

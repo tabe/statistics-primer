@@ -1,0 +1,8 @@
+*.aux
+*.log
+*.out
+*~
+.DS_Store
+auto/
+bayesian-statistics-primer-slide.pdf
+bayesian-statistics-primer-slide.tex

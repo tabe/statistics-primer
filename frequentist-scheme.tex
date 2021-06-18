@@ -1,0 +1,39 @@
+\begin{scope}[every node/.style={draw,rectangle}]
+\node (Omega) at (0,0) {{\Huge $\Omega$}};
+\node (Realization) at (3,0) {{\Huge $\Realization$}};
+\node (Action) at (6,0) {{\Huge $\Action$}};
+\node (Loss) at (9,0) {{\Huge $\Reals$}};
+\node (D) at (4.5,1.4) {{\Large $D$}};
+\node (Theta) at (1.5,3.5) {{\Huge $\Theta$}};
+\end{scope}
+
+\node (theta in Theta) at (1.5,2.7) {\rotatebox[origin=c]{90}{$\in$}};
+\node (in1) at (0,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (in2) at (3,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (in3) at (6,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (in4) at (9,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (in5) at (4.5,0.8) {\rotatebox[origin=c]{90}{$\in$}};
+
+\begin{scope}[every node/.style={}]
+\node (omega) at (0,-1.5) {$\omega$};
+\node (realization) at (3,-1.5) {$x$};
+\node (action) at (6,-1.5) {$a$};
+\node (loss) at (9,-1.5) {$L(\textcolor{orange}{\theta}, a)$};
+\end{scope}
+
+\draw[-Latex] (Omega) -- node[above] (X) {{\Large $X_{\textcolor{orange}{\theta}}$}} (Realization);
+\path (Omega) -- node[below] {確率変数} (Realization);
+\draw[-Latex] (Realization) -- node[above] (d) {{\Large $d$}}  (Action);
+\path (Realization) -- node[below] {決定規則} (Action);
+\draw[-Latex] (Action) -- node[above] (L) {{\Large $L(\textcolor{orange}{\theta}, \cdot)$}} (Loss);
+\path (Action) -- node[below] {損失} (Loss);
+\draw[|->] (omega) -- (realization);
+\draw[|->] (realization) -- (action);
+\draw[|->] (action) -- (loss);
+
+\node (theta) at (1.5,2) {$\textcolor{orange}{\theta}$};
+
+\begin{scope}[every path/.style={dashed,orange}]
+\draw (theta) -- (X);
+\draw (theta) -| (L);
+\end{scope}

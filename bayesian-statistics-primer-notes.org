@@ -1,7 +1,7 @@
 #+TITLE: ベイズ統計入門
 #+AUTHOR: 安部武志
 #+EMAIL: t.abe@yamaguchi-u.ac.jp
-#+DATE: 2021-06-18
+#+DATE: 2022-XX-XX
 #+OPTIONS: email:t toc:nil
 #+LICENSE: CC BY-SA 4.0
 #+LATEX_COMPILER: lualatex
@@ -409,11 +409,13 @@ f(r \mid x) = \frac{r^{\alpha + x - 1} (1 - r)^{n - x + \beta - 1}}{B(\alpha + x
 経験的ベイズ統計的手法とその応用については[3]が詳しい。
 ベイズ統計の基礎とともに数理統計一般を丁寧に説明している教科書として[4]がある。
 [5]では、ベイズ統計的手法を用いた生存解析のためのノンパラメトリックおよびセミパラメトリックなモデルを紹介している。
+[6]はベイズ統計モデルを用いる際の手順を分かり易い図で示した研究者向けの入門である。
 1. Young, G. & Smith, R. (2005). Essentials of Statistical Inference (Cambridge Series in Statistical and Probabilistic Mathematics). Cambridge: Cambridge University Press. [[https://doi.org/10.1017/CBO9780511755392][doi:10.1017/CBO9780511755392]]
 2. Chihara, L. M. & Hesterberg, T. C. (2018). Mathematical Statistics with Resampling and R, 2nd Edition. Wiley. ISBN-13: 9781119416548.
 3. Efron, B. (2010). Large-Scale Inference: Empirical Bayes Methods for Estimation, Testing, and Prediction, Institute of Mathematical Statistics Monographs. Cambridge University Press, Cambridge. [[https://doi.org/10.1017/CBO9780511761362][doi:10.1017/CBO9780511761362]]
 4. Miller, I. & Miller, M. (2018). John E. Freund's Mathematical Statistics with Applications, (Classic Version) 8th Edition (Pearson Modern Classics for Advanced Statistics Series). Pearson. ISBN-13: 9780134995373.
 5. Klein, J. P. & Moeschberger, M. L. (2003). Survival Analysis: Techniques for Censored and Truncated Data, 2nd Edition (Statistics for Biology and Health). Springer. [[https://doi.org/10.1007/b97377][doi:10.1007/b97377]]
+6. van de Schoot, R., Depaoli, S., King, R. et al. Bayesian statistics and modelling. Nat Rev Methods Primers 1, 1 (2021). [[https://doi.org/10.1038/s43586-020-00001-2][doi:10.1038/s43586-020-00001-2]]
 
 * 用語集
 この入門に出てきた統計用語をその英語表記とともにまとめる。

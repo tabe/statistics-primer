@@ -1,7 +1,7 @@
 #+TITLE: ベイズ統計入門
 #+AUTHOR: 安部武志
 #+EMAIL: t.abe@yamaguchi-u.ac.jp
-#+DATE: 2022-XX-XX
+#+DATE: 2022-06-15
 #+OPTIONS: email:t toc:nil
 #+LICENSE: CC BY-SA 4.0
 #+LATEX_COMPILER: lualatex
@@ -15,8 +15,8 @@
 この入門では、よく見られる確率論の慣習に従った表記に従う。
 - 別途明示的に書かない限り、各確率変数は確率空間\((\Omega, \Field, \mathbb{P})\)上のものとする。
   ここで\(\Omega\)は標本空間、\(\Field\)は事象全体の集合(つまり\(\Omega\)上の完全加法族)、\(\mathbb{P}\)は確率関数である。
-- 事象\(A\)について、\(\Prob{A}\)は(A\)の確率を表す。
-- 確率変数\(X\)について、ある実現値の(可測)集合\(W\)から定まる事象\(X^{-1}(W)\)[fn:3]についての確率\(\Prob{X^{-1}(W)}\)を\(\Prob{X \in W}\)と略す。
+- 事象\(A\)について、\(\Prob{A}\)は\(A\)の確率を表す。
+- 確率変数\(X\)について、ある実現値の(可測)集合\(W\)から定まる事象\(X^{-1}(W)\)[fn:1]についての確率\(\Prob{X^{-1}(W)}\)を\(\Prob{X \in W}\)と略す。
 - 確率変数\(X\)に対して\(\Prob{X}\)と書くことがあるが、これは"\(\Prob{X \in W}\)"のうちの"\(\in W\)"を略しているため、具体的な確率ではなく任意の(可測)集合\(W\)についての言明で用いられる。
 - 離散確率変数の場合には、確率\(\Prob{X \in \{x\}}\)を\(\Prob{X = x}\)で表す。
   さらには\(X\)も略して、\(\Prob{x}\)と書くこともある。
@@ -31,6 +31,7 @@
 記号を見ただけで何を表すかが分かりやすいように、この入門では以下のような表記を用いる。
 - 確率変数を表す記号: \(X, X_i\)等
 - 事象を表す記号: \(A, B, A_i, B_i\)等
+- 実現値を表す記号: \(x, x_i\)等
 - 実現値の(可測)集合を表す記号: \(W, W_i\)等
 - 母数を表す記号: \(\theta\)等
 
@@ -47,19 +48,24 @@
 以下の事実は「ベイズの定理」と呼ばれる確率論の基本的な定理である。
 
 ** ベイズの定理
-任意の事象\(A\)および\(B\)について、\(\Prob{A} \neq 0\)のとき以下が成り立つ:
+任意の事象\(A\)および\(B\)について、\(\Prob{A} \neq 0\)のとき[fn:2]以下が成り立つ:
 #+begin_export latex
 \begin{equation}\label{eqn:theorem}
-\CondProb{A}{B} = \frac{\CondProb{A}{B} \Prob{A}}{\Prob{B}}
+\CondProb{A}{B} = \frac{\CondProb{B}{A} \Prob{A}}{\Prob{B}}
 \end{equation}
 #+end_export
 
-この定理にしたがって事前確率とデータから事後確率を求めるというのが、ベイズ統計の基本となるアイデアである[fn:2]。
-興味の対象である仮説を\(H\)という確率変数で表すものとし、データを表す確率変数を\(D\)とするとき、
-\[\Prob{H \mid D} = \frac{\Prob{D \mid H} \Prob{H}}{\Prob{D}}\]
+この定理にしたがって事前確率とデータから事後確率を求めるというのが、ベイズ統計の基本となるアイデアである[fn:3]。
 
-あるいは、仮説のモデルに母数\(\theta\)という確率変数を用いる場合には
+** 尤度
+前節の式(\ref{eqn:theorem})から、興味の対象である仮説を\(H\)という確率変数で表すものとし、データを表す確率変数を\(D\)とするとき、
+\[\Prob{H \mid D} = \frac{\Prob{D \mid H} \Prob{H}}{\Prob{D}}\]
+と表される。
+
+あるいは、仮説を表現するモデルに母数\(\theta\)という確率変数を用いる場合には、以下のようになる。
 \[\Prob{\theta \mid D} = \frac{\Prob{D \mid \theta} \Prob{\theta}}{\Prob{D}}\]
+
+上式のうち、\(\Prob{D \mid \theta}\)という条件付き確率を尤度と呼ぶ。
 
 * ベイズ統計の概要
 ベイズ統計の枠組みを簡単に図示すると、以下のようになる:
@@ -76,7 +82,7 @@
 - どちらの流儀でも確率変数でランダムな出来事を表すという点は同じである。
 
 ** 相違点
-頻度主義統計においては、仮説は真であるかそうでないかのどちらかに限る。
+頻度主義統計においては、対象となる仮説が真であるかそうでないかのどちらかを判断するために推論する。
 一方ベイズ統計においては、仮説が真であるかどうかの不確かさを確率変数として表す。
 このことは、パラメトリックモデルの母数に依存して仮説の真偽が決まる場合には次のように言い換えられる。
 
@@ -108,9 +114,9 @@
 \node[draw,circle] (theta) at (0,0) {母数};
 \node[draw,rectangle,inner sep=5mm] (X) at (2,0) {\(X: \Outcome \to \Realization\)};
 \node[draw,circle] (x) at (4,0) {\(x\)};
-\node[draw,rectangle,inner sep=5mm] (d) at (2,-2) {\(d: \Realization \to \Action\)};
-\node[draw,circle] (a) at (4,-2) {\(a\)};
-\node[draw,rectangle,inner sep=5mm] (loss) at (2,-4) {\(L: \Theta \times \Action \to \Reals\)};
+\node[draw,rectangle,inner sep=5mm] (d) at (4,-2) {\(d: \Realization \to \Action\)};
+\node[draw,circle] (a) at (6,-2) {\(a\)};
+\node[draw,rectangle,inner sep=5mm] (loss) at (6,-4) {\(L: \Theta \times \Action \to \Reals\)};
 
 \draw (theta) -- (X);
 \draw[->] (X) -- (x);
@@ -126,24 +132,24 @@
 * 観察された実現値と行為
 ランダムな出来事を確率空間\((\Outcome, \Field, P)\)上の確率変数\(X: \Outcome \to \Realization\)で表現する。
 とり得る行為は一般に複数あり、それら全体の集合を\(\Action\)で表す。
-\(\Action\)の中から観察した実現値に応じて1つを選ぶ(決定する)とする。
+観察した実現値\(x\)に応じて\(\Action\)の中から1つを選ぶ(決定する)とする。
 
 さまざまな意思決定の状況をこの形式に当てはめることができる。以下にいくつかの例を挙げる。
 
 #+begin_export latex
 \newcommand{\exampleI}[1]{
 \begin{itemize}
-\item \(\Theta = \{健康, 風邪をひいている\}\): 朝の健康状態
+\item \(\Theta = \{健康, 睡眠不足, 風邪, インフルエンザ, \text{COVID-19}, ...\}\): 朝の健康状態
 \item \(\Realization = \Reals\): 朝の体温(℃)
-\item \(\Action = \{登校する, 休む, 病院に行く\}\)
+\item \(\Action = \{登校する, 休む, 病院に行く, ...\}\)
 #1
 \end{itemize}
 }
 \newcommand{\exampleII}[1]{
 \begin{itemize}
-\item \(\Theta = \Reals^+\): 今日の降水量(mm)
-\item \(\Realization = \Reals^+\): 午前の降水量(mm)
-\item \(\Action = \{傘を持たずに出かける, 傘を持って出かける, 外出しない, 避難する\}\)
+\item \(\Theta = \Reals^+\): 今日の24時間降水量(mm)
+\item \(\Realization = \Reals^+\): 午前8時時点の1時間降水量(mm)
+\item \(\Action = \{傘を持たずに出かける, 傘を持って出かける, 外出しない, 避難する, ...\}\)
 #1
 \end{itemize}
 }
@@ -212,7 +218,9 @@
 \[
 L: \Theta \times \Action \to \Reals
 \]
-この入門ではさらに
+ここで\(\Theta \times \Action\)は\(\Theta\)と\(\Action\)の[[https://en.wikipedia.org/wiki/Cartesian_product][直積]]を表す。
+
+損失関数\(L\)について、この入門では常に
 \[
 L(\theta, a) \geq 0
 \]
@@ -243,7 +251,7 @@ L(\theta, a) \geq 0
 #+end_export
 
 * リスク
-損失関数\(L(\theta, a)\)が与えられ、母数の値が\(\theta \in \Theta\)である場合、リスク関数\(\Risk(\theta, d)\)は次のように定義される:
+損失関数\(L\)が与えられ、母数の値が\(\theta \in \Theta\)である場合、リスク関数\(\Risk(\theta, d)\)は次のように定義される:
 \[
 \Risk(\theta, d) = \Esub{\theta}{L(\theta, d(X))}
 \]
@@ -259,10 +267,10 @@ L(\theta, a) \geq 0
 
 ** ミニマックス規則
 下した意思決定が招く最大のリスクをできるだけ小さくしたいとする。
-このようなときに求めるのは、次の性質を満たすような規則\(d^*\)である: すべての規則\(d\)について
+このようなときに求めるのは、次の性質を満たすような規則\(d^\ast\)である: すべての規則\(d\)について
 #+begin_export latex
 \begin{equation}\label{eqn:minimax}
-\MaxRisk(d^*) \leq \MaxRisk(d).
+\MaxRisk(d^\ast) \leq \MaxRisk(d).
 \end{equation}
 #+end_export
 ただし
@@ -270,10 +278,10 @@ L(\theta, a) \geq 0
 \MaxRisk(d) \equiv \sup_{\theta \in \Theta} R(\theta, d)
 \]
 と定義する。
-つまり、他の規則に変えてもリスクの上限がこれより小さくならないような規則が\(d^*\)である。
-上の式(\ref{eqn:minimax})を満たす規則\(d^*\)をミニマックスリスク規則と呼ぶ。
+つまり、他の規則に変えてもリスクの上限がこれより小さくならないような規則が\(d^\ast\)である。
+上の式(\ref{eqn:minimax})を満たす規則\(d^\ast\)をミニマックス(リスク)規則と呼ぶ。
 
-ミニマックスリスク規則\(d^*\)があれば、\(\MaxRisk(d^*)\)は
+ミニマックス規則\(d^\ast\)があれば、\(\MaxRisk(d^\ast)\)は
 \[
 \inf_{d \in \D} \sup_{\theta \in \Theta} R(\theta, d)
 \]
@@ -297,19 +305,21 @@ L(\theta, a) \geq 0
 #+end_export
 
 ** ベイズ規則
-仮に母数\(\theta\)が確率変数とする。適切な条件の下で、次のような期待値を計算できる。
+仮に母数\(\theta\)が確率変数とする。
+このとき\(R(\theta, d)\)も確率変数となる。
+適切な条件の下で、次のような期待値が定まる。
 \[
 \BayesRisk(d) \equiv \E{R(\theta, d)}
 \]
 この期待リスクをできるだけ小さくしたいとする。
-そのようなときに求める規則\(d^*\)は、次の性質を満たす: すべての規則\(d\)について
+そのようなときに求める規則\(d^\star\)は、次の性質を満たす: すべての規則\(d\)について
 #+begin_export latex
 \begin{equation}\label{eqn:bayesian}
-\BayesRisk(d^*) \leq \BayesRisk(d).
+\BayesRisk(d^\star) \leq \BayesRisk(d).
 \end{equation}
 #+end_export
-つまり、他の規則に変えても期待リスクがこれより小さくならないような規則が\(d^*\)である。
-上の式(\ref{eqn:bayesian})を満たす規則\(d^*\)をベイズ規則と呼ぶ。
+つまり、他の規則に変えても期待リスクがこれより小さくならないような規則が\(d^\star\)である。
+上の式(\ref{eqn:bayesian})を満たす規則\(d^\star\)をベイズ規則と呼ぶ。
 
 * パラメトリックなベイズ推定
 ベイズ統計の模式図\ref{fig:bayesian-framework}は、パラメトリックなモデルの場合は図\ref{fig:parametric-bayesian-framework}のようになる。
@@ -347,10 +357,10 @@ L(\theta, a) \geq 0
 - 最尤推定とMAP推定が *一致する*
 
 * 共役事前分布
-事前分布も事後分布も同じ分布族になる
-- \(\thetaprior\)から\(\thetaposterior\)を簡単に求められる
+ベイズ推定に際して事前分布と事後分布が同じ分布族で、\(\thetaprior\)とデータから\(\thetaposterior\)を代数的に容易に求めることができる場合がある。
+このような事前分布を共役事前分布と呼ぶ。
 
-* 共役事前分布の例
+** 共役事前分布の例
 \(n\)回試行、成功確率\(p\)の二項分布に従う確率変数\(X\)について推定したい。
 - ただし\(n\)は既知で固定とする。\(p\)が未知の母数(\(0 < p < 1\))。
 
@@ -375,10 +385,10 @@ f(r \mid x) = \frac{r^{\alpha + x - 1} (1 - r)^{n - x + \beta - 1}}{B(\alpha + x
 経験的ベイズでは、標本の *周辺確率* を事前分布に用いる。
 
 * ブートストラップ法
-限られたサイズの標本から標本分布の情報を得る。
+ブートストラップ法では、限られたサイズの標本から復元抽出で再標本を繰り返すことで、標本分布の情報を得る。
 
 * ナイーブベイズ分類器
-与えられたデータから分類を機械学習する手法の1つ。
+与えられたデータから分類器を機械学習する手法の1つ。
 
 ナイーブベイズ分類器は、目的変数\(C\)が与えられたときの各説明変数\(X_i\)同士は独立であるということを前提としている。
 すなわち、以下のような条件付き独立性を前提としている。
@@ -450,8 +460,11 @@ f(r \mid x) = \frac{r^{\alpha + x - 1} (1 - r)^{n - x + \beta - 1}}{B(\alpha + x
 - 推定値[estimator] :: 母数を推定するため観察された実現値から計算される値、あるいはその導出規則(式やアルゴリズム)。
 
 * Footnotes
-[fn:3] \(W\)の\(X\)による逆像: \(X^{-1}(W) \equiv \{\omega \in \Omega: X(\omega) \in W\}.\)
 
-[fn:1] \doclicenseLongText \doclicenseImage[imagewidth=4em]
+[fn:1] \(W\)の\(X\)による逆像: \(X^{-1}(W) \equiv \{\omega \in \Omega: X(\omega) \in W\}.\)
 
-[fn:2] ただし、これは(定理の仮定を満たす)どの確率についても成り立つ事実であることに注意。なので、この定理を使って何らかの条件付き確率を求めることは、統計の流儀に関わらず正当である。
+[fn:2] 条件付き確率\(\CondProb{A}{B}\)について考えていることから、\(\Prob{B} \neq 0\)も前提としている。
+
+[fn:3] これは(定理の仮定を満たす)どの確率変数についても成り立つ事実であることに注意。特に、この定理を使って何らかの条件付き確率を求めることは、統計の流儀に関わらず正当である。
+
+[fn:4] \doclicenseLongText \doclicenseImage[imagewidth=4em]

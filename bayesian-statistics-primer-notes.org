@@ -9,6 +9,10 @@
 #+LATEX_HEADER: \usepackage[type={CC},modifier={by-sa},version={4.0}]{doclicense}
 #+LATEX_HEADER: \input{definitions.tex}
 
+* この文書について
+
+この文書[fn:1]では、確率や統計の初学者を対象に、ベイズ統計の考え方を説明する。
+
 * 確率に関する表記
 
 ** 慣習
@@ -16,7 +20,7 @@
 - 別途明示的に書かない限り、各確率変数は確率空間\((\Omega, \Field, \mathbb{P})\)上のものとする。
   ここで\(\Omega\)は標本空間、\(\Field\)は事象全体の集合(つまり\(\Omega\)上の完全加法族)、\(\mathbb{P}\)は確率関数である。
 - 事象\(A\)について、\(\Prob{A}\)は\(A\)の確率を表す。
-- 確率変数\(X\)について、ある実現値の(可測)集合\(W\)から定まる事象\(X^{-1}(W)\)[fn:1]についての確率\(\Prob{X^{-1}(W)}\)を\(\Prob{X \in W}\)と略す。
+- 確率変数\(X\)について、ある実現値の(可測)集合\(W\)から定まる事象\(X^{-1}(W)\)[fn:2]についての確率\(\Prob{X^{-1}(W)}\)を\(\Prob{X \in W}\)と略す。
 - 確率変数\(X\)に対して\(\Prob{X}\)と書くことがあるが、これは"\(\Prob{X \in W}\)"のうちの"\(\in W\)"を略しているため、具体的な確率ではなく任意の(可測)集合\(W\)についての言明で用いられる。
 - 離散確率変数の場合には、確率\(\Prob{X \in \{x\}}\)を\(\Prob{X = x}\)で表す。
   さらには\(X\)も略して、\(\Prob{x}\)と書くこともある。
@@ -39,23 +43,61 @@
 - \(\Reals^+ \equiv \{r \in \Reals: r \geq 0\}\): 非負実数集合
 
 * 推計統計のための数理
-推計統計の2つの流儀である頻度主義統計およびベイズ統計は、以下の図に示すような共通の数理的な基礎づけがされている。
+推計統計の2つの流儀である頻度主義統計およびベイズ統計は、以下の図に示すような共通の数学的な基礎づけがされている。
 #+begin_export latex
 \input{foundation.tex}
 #+end_export
 
 * 確率論の基本
-以下の事実は「ベイズの定理」と呼ばれる確率論の基本的な定理である。
+** 独立性
+任意の事象\(A\)および\(B\)について、\(A\)と\(B\)が独立であるとは以下の条件が成り立つことである。
+#+begin_export latex
+\begin{equation}\label{eqn:independence1}
+\Prob{A \cap B} = \Prob{A} \Prob{B}
+\end{equation}
+#+end_export
+ただし\(A \cap B\)は\(A\)と\(B\)の[[https://en.wikipedia.org/wiki/Intersection_(set_theory)][共通部分]]を表し、\(A\)かつ\(B\)が生じているという事象を表す。
+
+独立性は、2つの確率変数\(X\)と\(Y\)の間にも自然に拡張して定義される。
+共通の確率空間上の確率変数\(X\)および\(Y\)について、\(X\)と\(Y\)が独立であるとは以下の条件が成り立つことである。
+#+begin_export latex
+\begin{equation}\label{eqn:independence2}
+\Prob{X, Y} = \Prob{X} \Prob{Y}
+\end{equation}
+#+end_export
+ただし\(\Prob{X, Y}\)は\(X\)と\(Y\)の同時確率を表す。
+
+** 条件付き確率
+任意の事象\(A\)および\(B\)について、条件付き確率\(\CondProb{A}{B}\)は以下のように定義される。
+#+begin_export latex
+\begin{equation}\label{eqn:conditional}
+\CondProb{A}{B} \equiv \frac{\Prob{A \cap B}}{\Prob{B}}
+\end{equation}
+#+end_export
+
+式(\ref{eqn:conditional})から分かるように、条件付き確率\(\CondProb{A}{B}\)は\(B\)が生じたという条件の下で\(A\)が生じる確率を表し、\(\Prob{B} \neq 0\)であるときのみ定義される。
+
+定義から、\(A\)と\(B\)が独立であるときは
+\[
+\CondProb{A}{B} = \Prob{A}
+\]
+かつ
+\[
+\CondProb{B}{A} = \Prob{B}
+\]
+が成り立つ。
 
 ** ベイズの定理
-任意の事象\(A\)および\(B\)について、\(\Prob{A} \neq 0\)のとき[fn:2]以下が成り立つ:
+条件付き確率について成り立つ以下の事実は、「ベイズの定理」と呼ばれる確率論の基本的な定理である。
+
+任意の事象\(A\)および\(B\)について、\(\Prob{A} \neq 0\)のとき[fn:3]以下が成り立つ:
 #+begin_export latex
 \begin{equation}\label{eqn:theorem}
 \CondProb{A}{B} = \frac{\CondProb{B}{A} \Prob{A}}{\Prob{B}}
 \end{equation}
 #+end_export
 
-この定理にしたがって事前確率とデータから事後確率を求めるというのが、ベイズ統計の基本となるアイデアである[fn:3]。
+この定理にしたがって事前確率とデータから事後確率を求めるというのが、ベイズ統計の基本となるアイデアである[fn:4]。
 
 ** 尤度
 前節の式(\ref{eqn:theorem})から、興味の対象である仮説を\(H\)という確率変数で表すものとし、データを表す確率変数を\(D\)とするとき、
@@ -78,7 +120,7 @@
 
 * 頻度主義統計とベイズ統計の比較
 ** 共通点
-頻度主義統計とベイズ統計という2つの流儀を比べるために、まず何が共通なのかについて考える。
+頻度主義統計とベイズ統計という2つの流儀を比べるために、まず何が共通なのかについて述べる。
 - どちらの流儀でも確率変数でランダムな出来事を表すという点は同じである。
 
 ** 相違点
@@ -156,7 +198,7 @@
 \newcommand{\exampleIII}[1]{
 6面体サイコロが1つ与えられる。
 \begin{itemize}
-\item \(\Theta = [0, 1]^6\): あるサイコロの出目の(真の)分布
+\item \(\Theta = [0, 1]^6\): あるサイコロの出目の分布を表すcategorical distributionの母数
 \item \(\Realization = \{1,2,3,4,5,6\}^n\): そのサイコロを\(n\)回独立に振った場合の出目を表す長さ\(n\)の列
 \item \(\Action = [1, 6]\): そのサイコロの出目の平均の点推定
 #1
@@ -165,7 +207,7 @@
 \newcommand{\exampleIV}[1]{
 6面体サイコロが1つ与えられる。
 \begin{itemize}
-\item \(\Theta = [0, 1]^6\): そのサイコロの出目の(真の)分布
+\item \(\Theta = [0, 1]^6\): そのサイコロの出目の分布を表すcategorical distributionの母数
 \item \(\Realization = \{1,2,3,4,5,6\}^n\): そのサイコロを\(n\)回独立に振った場合の出目を表す長さ\(n\)の列
 \item \(\Action = [1, 6]^2\): そのサイコロの出目の平均の95\%信頼区間
 #1
@@ -174,9 +216,9 @@
 \newcommand{\exampleV}[1]{
 クローンヒツジが\(n\)匹ずつ2群いる。各群のヒツジはそれぞれオリジナルのヒツジaおよびヒツジbからのクローンである。
 \begin{itemize}
-\item \(\Theta = \{0("aはbと同じである"), 1("aとbは異なる")\}\)
+\item \(\Theta = \{\theta_0("aはbと同じである"), \theta_1("aとbは異なる")\}\)
 \item \(\Realization = \Reals^+\): n匹ずつ2つの群に分かれている各ヒツジの体重(kg)
-\item \(\Action = \{H_0(2群は同じクローンから), H_1(2群は同じ母集団からではない)\}\): 仮説
+\item \(\Action = \{H_0("2群は同じ母集団に属する"), H_1("2群は同じ母集団に属しない")\}\): 仮説
 #1
 \end{itemize}
 }
@@ -240,15 +282,40 @@ L(\theta, a) \geq 0
 この入門では単に規則と略すことにする。
 
 * 意思決定の模式化
+(意思)決定理論における意思決定の模式図を図\ref{fig:decision-scheme}に示す。
 #+begin_export latex
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}
 \decisionscheme{a}
 \end{tikzpicture}
-\caption{意思決定の模式図}
+\caption{意思決定の模式図} \label{fig:decision-scheme}
 \end{figure}
 #+end_export
+
+** 頻度主義統計による決定
+上述の意思決定の枠組みで有意性検定や仮説検定といった頻度主義統計での意思決定を模式化すると、図\ref{fig:frequentist-scheme}のようになる。
+図\ref{fig:decision-scheme}と比較すると、\(\Omega\)や\(\mathcal{X}\)の代わりに\(\Psi\)や\(\mathcal{S}\)が出てきているが、
+同じ枠組みで扱えることが分かる。
+#+begin_export latex
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\input{frequentist-scheme.tex}
+\end{tikzpicture}
+\caption{頻度主義統計での意思決定の模式図} \label{fig:frequentist-scheme}
+\end{figure}
+#+end_export
+頻度主義統計でも不確かさを含む出来事を確率変数\(X\)で表し、特にパラメトリックな場合にはその母数\(\theta\)について判断しようとする。
+しかし、実際にデータとして用いるのは\(X\)からの\(n\)個の独立な標本であり、意思決定は標本分布に従う別の確率変数\(S\)を通じて行われる。
+一般に、この標本分布は標本サイズ\(n\)に依存している。
+同時に、この\(S\)は\(\theta\)に依存しており、間接的な形であるが\(X\)について判断できることになる。
+
+例えば、母平均\(\mu\)を点推定するために標本平均\(\bar{x}\)を用いることは、図\ref{fig:frequentist-scheme}内の\(s\)として
+\[
+s = \bar{x} = \frac{\sum_{i=1}^n x_i}{n}
+\]
+という統計量を考えていることになる。
 
 * リスク
 損失関数\(L\)が与えられ、母数の値が\(\theta \in \Theta\)である場合、リスク関数\(\Risk(\theta, d)\)は次のように定義される:
@@ -357,29 +424,31 @@ L(\theta, a) \geq 0
 - 最尤推定とMAP推定が *一致する*
 
 * 共役事前分布
-ベイズ推定に際して事前分布と事後分布が同じ分布族で、\(\thetaprior\)とデータから\(\thetaposterior\)を代数的に容易に求めることができる場合がある。
+ベイズ推定に際して事前分布と事後分布が同じ分布族で、\(\thetaprior\)とデータから\(\thetaposterior\)を代数的に容易に求められる場合がある。
 このような事前分布を共役事前分布と呼ぶ。
 
 ** 共役事前分布の例
 \(n\)回試行、成功確率\(p\)の二項分布に従う確率変数\(X\)について推定したい。
 - ただし\(n\)は既知で固定とする。\(p\)が未知の母数(\(0 < p < 1\))。
 
-\(p\)についての事前分布\(Y\)を、ある\(a > 0\)、\(b > 0\)を母数にもつベータ分布で表す。
+\(p\)の事前分布\(Y\)を、ある\(\alpha > 0\)、\(\beta > 0\)を母数にもつベータ分布で表す。
 
 そのようなベータ分布の密度関数は
 \[
-f(r; \alpha, \beta) = \frac{r^{\alpha - 1} (1 - r)^{\beta - 1}}{B(\alpha, \beta)}, 0 < r < 1.
+f(y; \alpha, \beta) = \frac{y^{\alpha - 1} (1 - y)^{\beta - 1}}{B(\alpha, \beta)},\qquad 0 < y < 1.
 \]
 
-\(X\)の観察データ\(x\)が入力された場合の事後分布はやはりベータ分布になり、その密度関数は
+\(X\)の観察データ\(x\)が入力された場合の事後分布\(Z\)はやはりベータ分布になり、その密度関数は
 \[
-f(r \mid x) = \frac{r^{\alpha + x - 1} (1 - r)^{n - x + \beta - 1}}{B(\alpha + x, \beta + n - x)}.
+f(z \mid x) = \frac{z^{\alpha + x - 1} (1 - z)^{n - x + \beta - 1}}{B(\alpha + x, \beta + n - x)},\qquad 0 < z < 1.
 \]
 
-\to \(x\)からすぐ計算できる
+になる。すなわち、\(x\)からすぐ事後分布の母数が計算できる。
 
-- 事前分布 :: 平均\(\frac{\alpha}{\alpha + \beta}\)、分散\(\frac{\alpha \beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}\)
-- 事後分布 :: 平均\(\frac{\alpha + x}{\alpha + \beta + n}\)、分散\(\frac{(\alpha + x)(\beta + n - x)}{(\alpha + \beta + n)^2 (\alpha + \beta + n + 1)}\)
+|          | 母数                            | 平均                                      | 分散                                                                                    |
+|----------+---------------------------------+-------------------------------------------+-----------------------------------------------------------------------------------------|
+| 事前分布 | \((\alpha, \beta)\)             | \(\frac{\alpha}{\alpha + \beta}\)         | \(\frac{\alpha \beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}\)                        |
+| 事後分布 | \((\alpha + x, \beta + n - x)\) | \(\frac{\alpha + x}{\alpha + \beta + n}\) | \(\frac{(\alpha + x)(\beta + n - x)}{(\alpha + \beta + n)^2 (\alpha + \beta + n + 1)}\) |
 
 * 経験的ベイズ
 経験的ベイズでは、標本の *周辺確率* を事前分布に用いる。
@@ -439,7 +508,10 @@ f(r \mid x) = \frac{r^{\alpha + x - 1} (1 - r)^{n - x + \beta - 1}}{B(\alpha + x
 - 信用区間[credible interval] :: 確信区間とも訳される。
 - 共役事前分布[conjugate prior] :: 対応する事後分布が同じ確率分布族になるような確率分布。推定が扱いやすいために事前分布に採用される。
 - 効用関数[utility function] :: 符号を逆転させることで、損失関数と同一視することができる。すなわち、効用関数の最大化は対応する損失関数の最小化にあたる。
+- 同時確率[joint probability] :: 複数の確率変数の組からなる確率変数の確率分布。
 - 完全加法族[\(\sigma\)-algebra] :: ある集合\(\Outcome\)上の完全加法族とは、完全加法性を満たす\(\Outcome\)の部分集合族。
+- 実現値[realization] :: 結果に確率変数をほどこして得られる値。
+- 推定値[estimator] :: 母数を推定するため観察された実現値から計算される値、あるいはその導出規則(式やアルゴリズム)。
 - 損失関数[loss function] :: 母数と行為にともなう損失を表す関数。
 - 最尤法[method of maximum likelihood] ::
 - 標本[sample] :: 母集団を表す確率変数の実現値をくり返し得ることに対応する。
@@ -456,15 +528,13 @@ f(r \mid x) = \frac{r^{\alpha + x - 1} (1 - r)^{n - x + \beta - 1}}{B(\alpha + x
 - 結果[outcome] :: 標本空間の要素。各事象は標本空間の部分集合なので、その要素は結果である。
 - 統計量[statistic] :: 標本から計算される量。
 - 行為[action] :: 行為空間の要素。
-- 実現値[realization] :: 結果に確率変数をほどこして得られる値。
-- 推定値[estimator] :: 母数を推定するため観察された実現値から計算される値、あるいはその導出規則(式やアルゴリズム)。
 
 * Footnotes
 
-[fn:1] \(W\)の\(X\)による逆像: \(X^{-1}(W) \equiv \{\omega \in \Omega: X(\omega) \in W\}.\)
+[fn:1] \doclicenseLongText \doclicenseImage[imagewidth=4em]
 
-[fn:2] 条件付き確率\(\CondProb{A}{B}\)について考えていることから、\(\Prob{B} \neq 0\)も前提としている。
+[fn:2] \(W\)の\(X\)による逆像: \(X^{-1}(W) \equiv \{\omega \in \Omega: X(\omega) \in W\}.\)
 
-[fn:3] これは(定理の仮定を満たす)どの確率変数についても成り立つ事実であることに注意。特に、この定理を使って何らかの条件付き確率を求めることは、統計の流儀に関わらず正当である。
+[fn:3] 条件付き確率\(\CondProb{A}{B}\)について考えていることから、\(\Prob{B} \neq 0\)も前提としている。
 
-[fn:4] \doclicenseLongText \doclicenseImage[imagewidth=4em]
+[fn:4] これは(定理の仮定を満たす)どの確率変数についても成り立つ事実であることに注意。特に、この定理を使って何らかの条件付き確率を求めることは、統計の流儀に関わらず正当である。

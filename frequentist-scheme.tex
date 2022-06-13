@@ -1,39 +1,71 @@
 \begin{scope}[every node/.style={draw,rectangle}]
 \node (Omega) at (0,0) {{\Huge $\Omega$}};
 \node (Realization) at (3,0) {{\Huge $\Realization$}};
-\node (Action) at (6,0) {{\Huge $\Action$}};
-\node (Loss) at (9,0) {{\Huge $\Reals$}};
-\node (D) at (4.5,1.4) {{\Large $D$}};
+\node[gray] (Psi) at (-3,-3) {{\Huge $\Psi$}};
+\node (Sample) at (6,-3) {{\Huge $\mathcal{S}$}};
+\node (Action) at (9,-3) {{\Huge $\Action$}};
+\node (Loss) at (12,-3) {{\Huge $\Reals$}};
+\node (D) at (7.5,-1.6) {{\Large $D$}};
 \node (Theta) at (1.5,3.5) {{\Huge $\Theta$}};
 \end{scope}
 
+\node[gray] (psi in Psi) at (-3,-3.9) {\rotatebox[origin=c]{90}{$\in$}};
 \node (theta in Theta) at (1.5,2.7) {\rotatebox[origin=c]{90}{$\in$}};
-\node (in1) at (0,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
-\node (in2) at (3,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
-\node (in3) at (6,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
-\node (in4) at (9,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
-\node (in5) at (4.5,0.8) {\rotatebox[origin=c]{90}{$\in$}};
+\node (omega in Omega) at (0,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (realization in Realization) at (3,-0.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (s in Sample) at (6,-3.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (a in Action) at (9,-3.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (loss in Loss) at (12,-3.9) {\rotatebox[origin=c]{90}{$\in$}};
+\node (d in D) at (7.5,-2.2) {\rotatebox[origin=c]{90}{$\in$}};
 
 \begin{scope}[every node/.style={}]
-\node (omega) at (0,-1.5) {$\omega$};
-\node (realization) at (3,-1.5) {$x$};
-\node (action) at (6,-1.5) {$a$};
-\node (loss) at (9,-1.5) {$L(\textcolor{orange}{\theta}, a)$};
+\node[gray] (psi) at (-3,-4.5) {$\psi$};
+\node (omega1) at (0,-1.5) {$\omega_1$};
+\node (omega2) at (0,-2.5) {$\omega_2$};
+\node (omega3) at (0,-3.5) {$\omega_3$};
+\node (omegaN) at (0,-5.5) {$\omega_n$};
+\node (inbetween) at (1.5,-4.5) {$...$};
+\node (extra) at (1.5,-6.5) {$...$};
+\node (realization1) at (3,-1.5) {$x_1$};
+\node (realization2) at (3,-2.5) {$x_2$};
+\node (realization3) at (3,-3.5) {$x_3$};
+\node (realizationN) at (3,-5.5) {$x_n$};
+\node (s) at (6,-4.5) {$s$};
+\node (action) at (9,-4.5) {$a$};
+\node (loss) at (12,-4.5) {$L(\textcolor{orange}{\theta}, a)$};
 \end{scope}
 
 \draw[-Latex] (Omega) -- node[above] (X) {{\Large $X_{\textcolor{orange}{\theta}}$}} (Realization);
 \path (Omega) -- node[below] {確率変数} (Realization);
-\draw[-Latex] (Realization) -- node[above] (d) {{\Large $d$}}  (Action);
-\path (Realization) -- node[below] {決定規則} (Action);
+\draw[-Latex] (Sample) -- node[above] (d) {{\Large $d$}}  (Action);
+\draw[-Latex,gray] (Psi) -- node[above] (S) {{\Large $S_{\textcolor{orange}{\theta}, \textcolor{green}{n}}$}} (Sample);
+\draw[-Latex,gray] (Psi) -- node[below] {標本} (Sample);
+\path (Sample) -- node[below] {決定規則} (Action);
 \draw[-Latex] (Action) -- node[above] (L) {{\Large $L(\textcolor{orange}{\theta}, \cdot)$}} (Loss);
 \path (Action) -- node[below] {損失} (Loss);
-\draw[|->] (omega) -- (realization);
-\draw[|->] (realization) -- (action);
+\draw[|->,gray] (psi) -- (s);
+\draw[|->] (omega1) -- (realization1);
+\draw[|->] (omega2) -- (realization2);
+\draw[|->] (omega3) -- (realization3);
+\draw[|->] (omegaN) -- (realizationN);
+\draw[dashed] (realization1) -- (s);
+\draw[dashed] (realization2) -- (s);
+\draw[dashed] (realization3) -- (s);
+\draw[dashed] (realizationN) -- (s);
+\draw[|->] (s) -- (action);
 \draw[|->] (action) -- (loss);
 
 \node (theta) at (1.5,2) {$\textcolor{orange}{\theta}$};
+\node (n) at (-3,-1.25) {$\textcolor{green}{n}$};
 
 \begin{scope}[every path/.style={dashed,orange}]
 \draw (theta) -- (X);
 \draw (theta) -| (L);
 \end{scope}
+
+\begin{scope}[every path/.style={dashed,green}]
+\draw (n) -| (Psi);
+\draw (n) -| (Sample);
+\end{scope}
+
+\draw[decorate,decoration={brace,amplitude=10pt},xshift=-10pt,yshift=0pt] (0,-7) -- (0,-1.5) node [black,midway,xshift=-4em] {independent};

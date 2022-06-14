@@ -109,6 +109,22 @@
 
 上式のうち、\(\Prob{D \mid \theta}\)という条件付き確率を尤度と呼ぶ。
 
+* 最尤法
+
+異なるいくつかの仮説から、与えられたデータに対し尤度を最大にするような仮説を選ぶ(推定する)ことを最尤法による推定、または最尤法と呼ぶ。
+すなわち
+\[
+\ML{H} = \argmax_{H} \CondProb{D}{H}
+\]
+を満たす\(\ML{H}\)を選ぶ。
+
+同様に、仮説を表現するために母数\(\theta\)で定まるモデルを用いる場合には、最尤推定では以下のように\(\ML{\theta}\)を選ぶ。
+#+begin_export latex
+\begin{equation}\label{eqn:maximum-likelihood}
+\ML{\theta} = \argmax_{\theta \in \Theta} \CondProb{D}{\theta}
+\end{equation}
+#+end_export
+
 * ベイズ統計の概要
 ベイズ統計の枠組みを簡単に図示すると、以下のようになる:
 
@@ -217,8 +233,17 @@
 クローンヒツジが\(n\)匹ずつ2群いる。各群のヒツジはそれぞれオリジナルのヒツジaおよびヒツジbからのクローンである。
 \begin{itemize}
 \item \(\Theta = \{\theta_0("aはbと同じである"), \theta_1("aとbは異なる")\}\)
-\item \(\Realization = \Reals^+\): n匹ずつ2つの群に分かれている各ヒツジの体重(kg)
+\item \(\Realization = (\Reals^+)^{2n}\): n匹ずつ2つの群に分かれている各ヒツジの体重(kg)
 \item \(\Action = \{H_0("2群は同じ母集団に属する"), H_1("2群は同じ母集団に属しない")\}\): 仮説
+#1
+\end{itemize}
+}
+\newcommand{\exampleVI}[1]{
+確率変数\(X\)と線形関係にある別の確率変数\(Y\)の組について、\(n\)個の実現値を独立に観測する。
+\begin{itemize}
+\item \(\Theta = \Reals\): \(Y = \epsilon + \alpha X\)を満たす\(\alpha\)、ただし\(\epsilon\)は誤差
+\item \(\Realization = (\Reals^2)^n\): 2次元平面上の\(n\)個の点\((x_i, y_i)\)
+\item \(\Action = \Reals\): \(y_i = a x_i\)に対して最小二乗法で求めた\(a\)
 #1
 \end{itemize}
 }
@@ -249,7 +274,12 @@
 \exampleV{}
 #+end_export
 
-このように、点推定、区間推定、そして仮説検定も意思決定問題として形式化できる。
+** 意思決定の例6
+#+begin_export latex
+\exampleVI{}
+#+end_export
+
+このように、点推定、区間推定、仮説検定、そして回帰も意思決定問題として形式化できる。
 
 * 損失関数、あるいは効用関数
 損失関数を最小にするという問題は、負の符号をほどこした対応する効用関数を最大にするという問題に置き換えることができる。
@@ -282,14 +312,14 @@ L(\theta, a) \geq 0
 この入門では単に規則と略すことにする。
 
 * 意思決定の模式化
-(意思)決定理論における意思決定の模式図を図\ref{fig:decision-scheme}に示す。
+(意思)決定理論における意思決定の枠組みを図\ref{fig:decision-scheme}に示す。
 #+begin_export latex
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}
 \decisionscheme{a}
 \end{tikzpicture}
-\caption{意思決定の模式図} \label{fig:decision-scheme}
+\caption{意思決定の枠組み} \label{fig:decision-scheme}
 \end{figure}
 #+end_export
 
@@ -303,7 +333,7 @@ L(\theta, a) \geq 0
 \begin{tikzpicture}
 \input{frequentist-scheme.tex}
 \end{tikzpicture}
-\caption{頻度主義統計での意思決定の模式図} \label{fig:frequentist-scheme}
+\caption{頻度主義統計での意思決定の枠組み} \label{fig:frequentist-scheme}
 \end{figure}
 #+end_export
 頻度主義統計でも不確かさを含む出来事を確率変数\(X\)で表し、特にパラメトリックな場合にはその母数\(\theta\)について判断しようとする。
@@ -410,6 +440,31 @@ s = \bar{x} = \frac{\sum_{i=1}^n x_i}{n}
 \end{figure}
 #+end_export
 
+* MAP法
+
+異なるいくつかの仮説から、与えられたデータに対し事後確率を最大にするような仮説を選ぶ(推定する)ことをMAP法による推定、またはMAP法と呼ぶ。
+すなわち
+\[
+\MAP{H} = \argmax_{H} \CondProb{H}{D}
+\]
+を満たす\(\MAP{H}\)を選ぶ。
+
+同様に、仮説を表現するために母数\(\theta\)で定まるモデルを用いる場合には、MAP推定では以下のように\(\MAP{\theta}\)を選ぶ。
+#+begin_export latex
+\begin{equation}\label{eqn:maximum-a-posteriori}
+\MAP{\theta} = \argmax_{\theta \in \Theta} \CondProb{\theta}{D}
+\end{equation}
+#+end_export
+
+ベイズの定理が適用できる場合、\(\Prob{D}は\(\theta\)に依存しないので、式(\ref{eqn:maximum-a-posteriori})は
+#+begin_export latex
+\begin{equation}\label{eqn:maximum-a-posteriori2}
+\MAP{\theta} = \argmax_{\theta \in \Theta} \CondProb{D}{\theta} \Prob{\theta}
+\end{equation}
+#+end_export
+と同じことになる。
+最尤推定の式(\ref{eqn:maximum-likelihood})と式(\ref{eqn:maximum-a-posteriori2})を比較すると、\(\theta\)についての事前確率\(\Prob{\theta}\)が現れていることに注意。
+
 * 事前分布の選択
 1. 無情報的事前分布
 2. パラメトリックなアプローチ
@@ -469,7 +524,7 @@ f(z \mid x) = \frac{z^{\alpha + x - 1} (1 - z)^{n - x + \beta - 1}}{B(\alpha + x
 \[
 \hat{c} = \argmax_{c \in V_C} \Prob{c} \prod_{i=1}^N \CondProb{x_i}{c}
 \]
-は、MAP規則から導かれる。
+は、MAP法から導かれる。
 
 * ベイズ統計における区間推定: 信用区間
 

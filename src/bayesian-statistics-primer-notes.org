@@ -456,7 +456,7 @@ s = \bar{x} = \frac{\sum_{i=1}^n x_i}{n}
 \end{equation}
 #+end_export
 
-ベイズの定理が適用できる場合、\(\Prob{D}は\(\theta\)に依存しないので、式(\ref{eqn:maximum-a-posteriori})は
+ベイズの定理が適用できる場合、\(\Prob{D}\)は\(\theta\)に依存しないので、式(\ref{eqn:maximum-a-posteriori})は
 #+begin_export latex
 \begin{equation}\label{eqn:maximum-a-posteriori2}
 \MAP{\theta} = \argmax_{\theta \in \Theta} \CondProb{D}{\theta} \Prob{\theta}

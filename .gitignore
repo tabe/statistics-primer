@@ -1,8 +1,6 @@
 *.aux
 *.log
 *.out
-*~
-.DS_Store
+*.pdf
 auto/
-bayesian-statistics-primer-notes.pdf
-bayesian-statistics-primer-notes.tex
+result

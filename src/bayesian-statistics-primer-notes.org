@@ -197,7 +197,7 @@
 #+begin_export latex
 \newcommand{\exampleI}[1]{
 \begin{itemize}
-\item \(\Theta = \{健康, 睡眠不足, 風邪, インフルエンザ, \text{COVID-19}, ...\}\): 朝の健康状態
+\item \(\Theta = \{健康, 睡眠不足, 風邪, インフルエンザ, \text{SARS-CoV-2}, ...\}\): 朝の身体状態
 \item \(\Realization = \Reals\): 朝の体温(℃)
 \item \(\Action = \{登校する, 休む, 病院に行く, ...\}\)
 #1
@@ -418,6 +418,20 @@ s = \bar{x} = \frac{\sum_{i=1}^n x_i}{n}
 つまり、他の規則に変えても期待リスクがこれより小さくならないような規則が\(d^\star\)である。
 上の式(\ref{eqn:bayesian})を満たす規則\(d^\star\)をベイズ規則と呼ぶ。
 
+* ベイズ統計による決定
+ベイズ統計では、ベイズ規則に従って事後分布\(\thetaposterior\)を求める。
+つまり、行為として\(\thetaposterior\)を決定する。
+事前分布\(\thetaprior\)から事後分布\(\thetaposterior\)に至るベイズ統計での意思決定を模式化すると、図\ref{fig:bayesian-scheme2}のようになる。
+#+begin_export latex
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\input{bayesian-scheme2.tex}
+\end{tikzpicture}
+\caption{ベイズ統計での意思決定の枠組み} \label{fig:bayesian-scheme2}
+\end{figure}
+#+end_export
+
 * パラメトリックなベイズ推定
 ベイズ統計の模式図\ref{fig:bayesian-framework}は、パラメトリックなモデルの場合は図\ref{fig:parametric-bayesian-framework}のようになる。
 #+begin_export latex
@@ -466,10 +480,12 @@ s = \bar{x} = \frac{\sum_{i=1}^n x_i}{n}
 最尤推定の式(\ref{eqn:maximum-likelihood})と式(\ref{eqn:maximum-a-posteriori2})を比較すると、\(\theta\)についての事前確率\(\Prob{\theta}\)が現れていることに注意。
 
 * 事前分布の選択
+ベイズ統計では、事前分布をどのように決めるかについて、いくつかの典型例がある。
 1. 無情報的事前分布
 2. パラメトリックなアプローチ
   - 経験的ベイズ
   - 共役事前分布
+  - 階層ベイズ
 3. ノンパラメトリックなアプローチ
   - 経験的ベイズ
   - ブートストラップ
@@ -507,6 +523,61 @@ f(z \mid x) = \frac{z^{\alpha + x - 1} (1 - z)^{n - x + \beta - 1}}{B(\alpha + x
 
 * 経験的ベイズ
 経験的ベイズでは、標本の *周辺確率* を事前分布に用いる。
+特に、事前分布を標本のデータから決める。
+これは一見、データと事前分布を分けて考えるベイズ統計の基本にそぐわないように見えるが、実際は後述する階層ベイズの特殊な場合といえる。
+
+* 階層ベイズ
+階層ベイズでは、事前分布もまたパラメトリックとして、事前分布の母数を定めるさらなる分布を考える。
+すなわち、\(\thetaprior\)自体が\(\xi\)という母数を持つ確率変数とする。
+このような\(\xi\)を超母数と呼び、階層ベイズモデルでは\(\xi\)も確率的に振る舞うものとして確率変数\(\xihyperprior\)で表す。
+
+式で書くと
+\begin{align*}
+\xi &\sim \xihyperprior;\\
+\theta \mid \xi &\sim \thetaprior(\xi);\\
+x \mid \theta &\sim X_\theta.
+\end{align*}
+
+図\ref{fig:hierarchical-bayesian-scheme}のような模式図で表される。
+#+begin_export latex
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\input{hierarchical-bayesian-scheme.tex}
+\end{tikzpicture}
+\caption{階層ベイズでの意思決定の枠組み} \label{fig:hierarchical-bayesian-scheme}
+\end{figure}
+#+end_export
+
+さらに階層を増やすこともある。
+
+** 階層ベイズモデルの例: 肉腫の治療効果
+Thall et al. (2003)[fn:5]で紹介されている、肉腫に対するimatinibの治療効果についての階層ベイズモデルは次の式で表される。
+
+\(k = 10\)個のサブタイプに対し、それぞれの治療効果\(\rho_i\)は共通の正規分布に従うとする。
+\begin{align}
+\mu \sim \operatorname{Normal}(\mu_{\text{mean}}, \mu_{\text{sd}}^2);\\
+\sigma^2 \sim \operatorname{InverseGamma}(\tau_\alpha, \tau_\beta);\\
+\rho_1, \cdots, \rho_k \sim \operatorname{Normal}(\mu, \sigma^2)
+\end{align}
+すなわち、事前分布の母数はベクトル\((\mu, \sigma^2)\)であり、
+超母数はベクトル\((\mu_{\text{mean}}, \mu_{\text{sd}}^2, \tau_\alpha, \tau_\beta)\)である。
+
+サブタイプ\(i\)での応答率\(p_i\)は、\(\rho_i\)にlogit関数の逆関数であるlogistic関数をほどこして得られると考え、
+サブタイプ\(i\)の\(n_i\)人からなる患者群で\(x_i\)人の応答例が臨床試験で報告されるという状況をモデル化する。
+\begin{align}
+p_i &= \operatorname{logit}^{-1}(\rho_i);\\
+x_i &\sim \operatorname{Binomial}(n_i, p_i)
+\end{align}
+
+臨床試験の報告データ\(D\)に基づいて治療に効果が期待できるかどうかは、以下のように尤度の大きさを評価することで判断できる。
+\begin{align}
+\CondProb{p_i > \theta}{D} > q
+\end{align}
+ただし\(\theta\)は考慮に値する応答率の下限、\(q\)は承認に必要な確からしさを表す。
+Thall et al. (2003)では、\(\theta = 0.3\)とされた。
+
+Rの =trialr= パッケージのドキュメント[fn:6]には、MCMC法による解析例が示されている。
 
 * ブートストラップ法
 ブートストラップ法では、限られたサイズの標本から復元抽出で再標本を繰り返すことで、標本分布の情報を得る。
@@ -583,6 +654,7 @@ f(z \mid x) = \frac{z^{\alpha + x - 1} (1 - z)^{n - x + \beta - 1}}{B(\alpha + x
 - 結果[outcome] :: 標本空間の要素。各事象は標本空間の部分集合なので、その要素は結果である。
 - 統計量[statistic] :: 標本から計算される量。
 - 行為[action] :: 行為空間の要素。
+- 超母数[hyperparameter] :: 母数自体が確率変数で表される場合の、その確率分布の母数のこと。
 
 * Footnotes
 
@@ -593,3 +665,7 @@ f(z \mid x) = \frac{z^{\alpha + x - 1} (1 - z)^{n - x + \beta - 1}}{B(\alpha + x
 [fn:3] 条件付き確率\(\CondProb{A}{B}\)について考えていることから、\(\Prob{B} \neq 0\)も前提としている。
 
 [fn:4] これは(定理の仮定を満たす)どの確率変数についても成り立つ事実であることに注意。特に、この定理を使って何らかの条件付き確率を求めることは、統計の流儀に関わらず正当である。
+
+[fn:5] Thall PF, Wathen JK, Bekele BN, Champlin RE, Baker LH, Benjamin RS. Hierarchical Bayesian approaches to phase II trials in diseases with multiple subtypes. Statistics in Medicine. 2003;22(5):763-780. doi:10.1002/sim.1399
+
+[fn:6] https://brockk.github.io/trialr/articles/A500-HierarchicalBayesianResponse.html

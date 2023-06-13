@@ -1,0 +1,51 @@
+\decisionscheme{a}{P}
+
+\color{blue}
+
+\begin{scope}[every node/.style={draw,rectangle}]
+\node (U) at (-1.5,3.5) {{\Huge $U$}};
+\end{scope}
+
+\node (u in U) at (-1.5,2.7) {\rotatebox[origin=c]{90}{$\in$}};
+
+\begin{scope}[every node/.style={}]
+\node (u) at (-1.5,2) {$u$};
+\end{scope}
+
+\draw[-Latex] (U) -- node[above] (thetaprior) {{\Large $\thetaprior(\xi)$}} (Theta);
+\draw[|->] (u) -- (theta);
+
+\begin{scope}[every node/.style={}]
+\node (xi) at (0,5.5) {$\xi$};
+\end{scope}
+
+\draw[dashed] (xi) -- (thetaprior);
+
+\color{black}
+
+\begin{scope}[every node/.style={draw,rectangle}]
+\node (Xi) at (0,7) {{\Huge $\Xi$}};
+\end{scope}
+
+\node (xi in Xi) at (0,6.2) {\rotatebox[origin=c]{90}{$\in$}};
+
+\color{teal}
+
+\begin{scope}[every node/.style={draw,rectangle}]
+\node (V) at (-3,7) {{\Huge $V$}};
+\end{scope}
+
+\node (v in V) at (-3,6.2) {\rotatebox[origin=c]{90}{$\in$}};
+
+\begin{scope}[every node/.style={}]
+\node (v) at (-3,5.5) {$v$};
+\end{scope}
+
+\draw[-Latex] (V) -- node[above] (xihyperprior) {{\Large $\xihyperprior$}} (Xi);
+\draw[|->] (v) -- (xi);
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

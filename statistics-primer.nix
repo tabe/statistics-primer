@@ -1,7 +1,7 @@
 { pkgs, stdenv }:
 stdenv.mkDerivation {
   pname = "statistics-primer";
-  version = "2023.06.08";
+  version = "2023.06.13";
 
   nativeBuildInputs = with pkgs; [
     emacs
@@ -16,7 +16,6 @@ stdenv.mkDerivation {
 
   installPhase = ''
     install -d $out
-    install definitions.tex $out/
     install bayesian-statistics-primer-notes.pdf $out/
   '';
 }

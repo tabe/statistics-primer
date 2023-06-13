@@ -11,7 +11,7 @@
 \\usepackage{hyperref}
 \\hypersetup{pdfencoding=auto}
 \\usepackage{tikz}
-\\usetikzlibrary{arrows.meta,arrows,decorations.pathreplacing}
+\\usetikzlibrary{arrows.meta,arrows,decorations.pathreplacing,fit,shapes.geometric}
 "
                ("\\section{%s}" . "\\section*{%s}")
                ("\\subsection{%s}" . "\\subsection*{%s}")

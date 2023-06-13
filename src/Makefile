@@ -11,5 +11,5 @@ bayesian-statistics-primer-notes.tex: bayesian-statistics-primer-notes.el bayesi
 	emacs --batch -q -Q -l bayesian-statistics-primer-notes.el bayesian-statistics-primer-notes.org -f org-latex-export-to-latex --kill
 
 bayesian-statistics-primer-notes.pdf: bayesian-statistics-primer-notes.tex
-	lualatex ${LUALATEX_OPTIONS} $<
-	lualatex ${LUALATEX_OPTIONS} $<
+	lualatex $<
+	lualatex $<

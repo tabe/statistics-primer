@@ -555,27 +555,28 @@ x \mid \theta &\sim X_\theta.
 Thall et al. (2003)[fn:5]で紹介されている、肉腫に対するimatinibの治療効果についての階層ベイズモデルは次の式で表される。
 
 \(k = 10\)個のサブタイプに対し、それぞれの治療効果\(\rho_i\)は共通の正規分布に従うとする。
-\begin{align}
-\mu \sim \operatorname{Normal}(\mu_{\text{mean}}, \mu_{\text{sd}}^2);\\
-\sigma^2 \sim \operatorname{InverseGamma}(\tau_\alpha, \tau_\beta);\\
-\rho_1, \cdots, \rho_k \sim \operatorname{Normal}(\mu, \sigma^2)
-\end{align}
+\begin{align*}
+\mu &\sim \operatorname{Normal}(\mu_{\text{mean}}, \mu_{\text{sd}}^2);\\
+\sigma^2 &\sim \operatorname{InverseGamma}(\tau_\alpha, \tau_\beta);\\
+\rho_1, \cdots, \rho_k &\sim \operatorname{Normal}(\mu, \sigma^2)
+\end{align*}
 すなわち、事前分布の母数はベクトル\((\mu, \sigma^2)\)であり、
 超母数はベクトル\((\mu_{\text{mean}}, \mu_{\text{sd}}^2, \tau_\alpha, \tau_\beta)\)である。
 
 サブタイプ\(i\)での応答率\(p_i\)は、\(\rho_i\)にlogit関数の逆関数であるlogistic関数をほどこして得られると考え、
 サブタイプ\(i\)の\(n_i\)人からなる患者群で\(x_i\)人の応答例が臨床試験で報告されるという状況をモデル化する。
-\begin{align}
-p_i &= \operatorname{logit}^{-1}(\rho_i);\\
+つまり、確率\(p_i\)で成功するベルヌーイ試行を独立に\(n_i\)回した結果の成功回数にあたる二項分布に従う。
+\begin{align*}
+p_i &= \operatorname{logit}^{-1}(\rho_i) = \operatorname{logistic}(\rho_i) = \frac{1}{1 + e^{-\rho_i}};\\
 x_i &\sim \operatorname{Binomial}(n_i, p_i)
-\end{align}
+\end{align*}
 
-臨床試験の報告データ\(D\)に基づいて治療に効果が期待できるかどうかは、以下のように尤度の大きさを評価することで判断できる。
-\begin{align}
-\CondProb{p_i > \theta}{D} > q
-\end{align}
-ただし\(\theta\)は考慮に値する応答率の下限、\(q\)は承認に必要な確からしさを表す。
-Thall et al. (2003)では、\(\theta = 0.3\)とされた。
+臨床試験の報告データ\(D\)に基づいて治療に効果が期待できるかどうかは、以下のように事後分布から判断できる。
+\begin{align*}
+\CondProb{p_i > \vartheta}{D} > q
+\end{align*}
+ただし\(\vartheta\)は考慮に値する応答率の下限、\(q\)は承認に必要な確からしさを表す。
+Thall et al. (2003)では、\(\vartheta = 0.3\)とされた。
 
 Rの =trialr= パッケージのドキュメント[fn:6]には、MCMC法による解析例が示されている。
 

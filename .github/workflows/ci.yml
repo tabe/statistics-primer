@@ -1,0 +1,18 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - name: Build
+        run: nix build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: bayesian-statistics-primer-notes
+          path: result/bayesian-statistics-primer-notes.pdf

@@ -12,7 +12,9 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Build
         run: nix build
+      - name: Read a symlink
+        run: echo "UPLOAD_PATH=$(readlink -f result)" >> $GITHUB_ENV
       - uses: actions/upload-artifact@v3
         with:
-          name: bayesian-statistics-primer-notes
-          path: result/bayesian-statistics-primer-notes.pdf
+          name: result
+          path: ${{ env.UPLOAD_PATH }}

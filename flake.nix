@@ -9,8 +9,27 @@
 
     forAllSystems = f: nixpkgs.lib.genAttrs allSystems (system: f (import nixpkgs { inherit system; }));
 
-    statistics-primer = pkgs:
-      with pkgs; callPackage ./statistics-primer.nix {};
+    statistics-primer = pkgs: with pkgs;
+      stdenv.mkDerivation {
+        pname = "statistics-primer";
+        version = "2024.06.11";
+
+        nativeBuildInputs = [
+          emacs
+          texlive.combined.scheme-full
+        ];
+
+        src = ./src;
+
+        preBuild = ''
+          export HOME=$(mktemp -d) # https://github.com/NixOS/nixpkgs/issues/180639
+        '';
+
+        installPhase = ''
+          install -d $out
+          install bayesian-statistics-primer-notes.pdf $out/
+        '';
+      };
 
   in {
 

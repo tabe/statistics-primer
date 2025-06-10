@@ -12,6 +12,7 @@
 \\hypersetup{pdfencoding=auto}
 \\usepackage{tikz}
 \\usetikzlibrary{arrows.meta,arrows,decorations.pathreplacing,fit,shapes.geometric}
+\\usepackage{ulem}
 "
                ("\\section{%s}" . "\\section*{%s}")
                ("\\subsection{%s}" . "\\subsection*{%s}")

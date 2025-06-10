@@ -1,7 +1,7 @@
 #+TITLE: ベイズ統計入門
 #+AUTHOR: 安部武志
 #+EMAIL: t.abe@yamaguchi-u.ac.jp
-#+DATE: 2022-06-15
+#+DATE: 2025-06-10
 #+OPTIONS: email:t toc:nil
 #+LICENSE: CC BY-SA 4.0
 #+LATEX_COMPILER: lualatex
@@ -163,18 +163,21 @@
 * （意思）決定理論
 決定理論と呼ばれる理論は、確率論に基づいた数学の一分野である。
 ランダムな出来事が生じる状況において行為を選択する（意思決定する）上で、いかに損失を少なくするかという問題を解くための理論である。
-つまり、不確かな状況を表す確率変数に応じた決定によって損失をなるべく小さくすることを目的としている。
+_つまり、不確かな状況を表す確率変数に応じた決定によって損失をなるべく小さくすることを目的としている。_
+
+図\ref{fig:formal-decision-flow}は形式化された意思決定の流れを表す。
 
 #+begin_export latex
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}
-\node[draw,circle] (theta) at (0,0) {母数};
+\node[draw,circle] (theta) at (0,0) {母数 \(\theta\)};
 \node[draw,rectangle,inner sep=5mm] (X) at (2,0) {\(X: \Outcome \to \Realization\)};
 \node[draw,circle] (x) at (4,0) {\(x\)};
 \node[draw,rectangle,inner sep=5mm] (d) at (4,-2) {\(d: \Realization \to \Action\)};
 \node[draw,circle] (a) at (6,-2) {\(a\)};
 \node[draw,rectangle,inner sep=5mm] (loss) at (6,-4) {\(L: \Theta \times \Action \to \Reals\)};
+\node[draw,circle] (l) at (8.5,-4) {\(l\)};
 
 \draw (theta) -- (X);
 \draw[->] (X) -- (x);
@@ -182,10 +185,16 @@
 \draw[->] (d) -- (a);
 \draw[->] (theta) |- (loss);
 \draw[->] (a) -- (loss);
+\draw[->] (loss) -- (l);
 \end{tikzpicture}
-\caption{決定理論の枠組み}
+\caption{形式化された意思決定の流れ}\label{fig:formal-decision-flow}
 \end{figure}
 #+end_export
+
+ここで
+- \(X\)は不確かな状況を表す確率変数であり、\(\theta\)という母数をもつ。\(x\)は\(X\)の実現値、つまり具体的に観測された事象を表す。
+- \(d\)という関数で、観測に応じてどのように決定を行うかに関する規則を表す。つまり\(a=d(x)\)は、\(x\)に対して\(d\)で決めた行為を表す。
+- \(L\)という関数で、ある状況に際してある行為を行うときに生じる損失を表す。つまり\(l=L(\theta, a)\)は、実際の母数が\(\theta\)であるときに、行為\(a\)をとるときに生じる損失を表す。
 
 * 観察された実現値と行為
 ランダムな出来事を確率空間\((\Outcome, \Field, P)\)上の確率変数\(X: \Outcome \to \Realization\)で表現する。

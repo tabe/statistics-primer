@@ -7,12 +7,12 @@
 
     allSystems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
 
-    forAllSystems = f: nixpkgs.lib.genAttrs allSystems (system: f (import nixpkgs { inherit system; }));
+    forAllSystems = nixpkgs.lib.genAttrs allSystems;
 
-    statistics-primer = pkgs: with pkgs;
+    statistics-primer = system: with nixpkgs.legacyPackages.${system};
       stdenv.mkDerivation {
         pname = "statistics-primer";
-        version = "2024.06.11";
+        version = "2025.06.10";
 
         nativeBuildInputs = [
           emacs
@@ -24,17 +24,12 @@
         preBuild = ''
           export HOME=$(mktemp -d) # https://github.com/NixOS/nixpkgs/issues/180639
         '';
-
-        installPhase = ''
-          install -d $out
-          install bayesian-statistics-primer-notes.pdf $out/
-        '';
       };
 
   in {
 
-    packages = forAllSystems (pkgs: {
-      default = statistics-primer pkgs;
+    packages = forAllSystems (system: {
+      default = statistics-primer system;
     });
 
   };

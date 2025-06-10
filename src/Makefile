@@ -1,11 +1,12 @@
 TEX_FILES = foundation.tex
 
-.PHONY: all clean
+.PHONY: all install
 
 all: bayesian-statistics-primer-notes.pdf
 
-clean:
-	-rm -rf bayesian-statistics-primer-notes.tex bayesian-statistics-primer-notes.pdf
+install:
+	install -d $(out)
+	install bayesian-statistics-primer-notes.pdf $(out)/
 
 bayesian-statistics-primer-notes.tex: bayesian-statistics-primer-notes.el bayesian-statistics-primer-notes.org $(TEX_FILES)
 	emacs --batch -q -Q -l bayesian-statistics-primer-notes.el bayesian-statistics-primer-notes.org -f org-latex-export-to-latex --kill

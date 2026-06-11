@@ -12,17 +12,17 @@
     statistics-primer = system: with nixpkgs.legacyPackages.${system};
       stdenv.mkDerivation {
         pname = "statistics-primer";
-        version = "2025.06.10";
+        version = "2026.06.11";
 
         nativeBuildInputs = [
-          emacs
+          emacs-nox
           texlive.combined.scheme-full
         ];
 
         src = ./src;
 
         preBuild = ''
-          export HOME=$(mktemp -d) # https://github.com/NixOS/nixpkgs/issues/180639
+          export TEXMFVAR=$(mktemp -d) # https://github.com/NixOS/nixpkgs/issues/180639
         '';
       };
 
